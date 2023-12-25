@@ -23,13 +23,17 @@ function setupCronJob() {
         const user = await User.findById(userId);
 
         if (user) {
+          const quoteResponse = await fetch(
+            "https://dummyjson.com/quotes/random"
+          );
+          const quoteData = await quoteResponse.json();
+          const quote = quoteData.quote;
           let message = {
             from: "smartakshat007@gmail.com",
             to: user.email,
             subject: "Today's Quote...",
-            text: `Quote`,
+            text: `${quote}`,
           };
-
           await transporter.sendMail(message);
           console.log("Emails sent successfully!");
         } else {

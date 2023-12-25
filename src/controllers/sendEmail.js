@@ -31,12 +31,11 @@ function setupCronJob() {
           };
 
           await transporter.sendMail(message);
+          console.log("Emails sent successfully!");
         } else {
           console.log(`User with ID ${userId} not found.`);
         }
       }
-
-      console.log("Emails sent successfully!");
     } catch (error) {
       console.error("Error sending emails:", error);
     }

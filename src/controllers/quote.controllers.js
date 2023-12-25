@@ -1,9 +1,8 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import jwt from "jsonwebtoken";
-import { User } from "../models/user.models.js";
 import { Subscribe } from "../models/subscribe.models.js";
+import { User } from "../models/user.models.js";
 
 const subscribeQuote = asyncHandler(async (req, res) => {
   const existingSubscription = await Subscribe.findOne({

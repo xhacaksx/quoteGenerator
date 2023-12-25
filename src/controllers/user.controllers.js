@@ -99,7 +99,7 @@ const registerUser = asyncHandler(async (req, res) => {
       });
   }
   sendMail();
-  return res.status(201).redirect("/api/v1/login");
+  return res.status(201).redirect("/api/v1/users/login");
 });
 
 const loginUser = asyncHandler(async (req, res) => {

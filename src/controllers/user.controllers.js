@@ -3,6 +3,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -20,7 +22,13 @@ const generateAccessAndRefreshTokens = async (userId) => {
     throw new ApiError(500, "Something went wrong while generating tokens!");
   }
 };
+const getRegisterUser = asyncHandler(async (req, res) => {
+  return res.render("register");
+});
 
+const getLoginUser = asyncHandler(async (req, res) => {
+  return res.render("login");
+});
 const registerUser = asyncHandler(async (req, res) => {
   //get user details from frontend
   //validation -- not empty (aur bhi de sakte)
@@ -47,7 +55,7 @@ const registerUser = asyncHandler(async (req, res) => {
     $or: [{ username }, { email }],
   });
   if (existedUser) {
-    throw new ApiError(409, "User with email or username already exists!");
+    throw new ApiError(401, "User with email or username already exists!");
   }
 
   const user = await User.create({
@@ -64,27 +72,56 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
+  async function sendMail() {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "smartakshat007@gmail.com",
+        pass: "hzxkwbcodtozhjgm",
+      },
+    });
 
-  return res
-    .status(201)
-    .json(new ApiResponse(200, createdUser, "User registered successfully"));
+    let message = {
+      from: "smartakshat007@gmail.com", // sender address
+      to: `${user.email}`, // list of receivers
+      subject: "Registeration successful", // Subject line
+      text: `Hello ${user.username}, you are successfully registered!`, // plain text body
+    };
+
+    transporter
+      .sendMail(message)
+      .then(() => {
+        console.log("Email sent successfully!");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  sendMail();
+  return res.status(201).redirect("/api/v1/login");
 });
 
 const loginUser = asyncHandler(async (req, res) => {
   // req body -> data
 
-  const { username, email, password } = req.body;
-  if (!(username || email)) {
-    throw new ApiError(400, "username or password is required!");
+  const { usernameOrEmail, password } = req.body;
+  if (!usernameOrEmail) {
+    throw new ApiError(400, "Username or email is required!");
   }
   //username or email
 
   //find karega ya toh username ya email mil jaye
-  const user = await User.findOne({
-    $or: [{ username }, { email }],
-  });
-  //find the user
 
+  //find the user
+  let user;
+  const isEmail = usernameOrEmail.includes("@");
+  if (isEmail) {
+    // If it's an email, query by email
+    user = await User.findOne({ email: usernameOrEmail });
+  } else {
+    // If it's a username, query by username
+    user = await User.findOne({ username: usernameOrEmail });
+  }
   if (!user) {
     throw new ApiError(404, "User does not exist!");
   }
@@ -114,17 +151,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .status(200)
     .cookie("accessToken", accessToken, options)
     .cookie("refreshToken", refreshToken, options)
-    .json(
-      new ApiResponse(
-        200,
-        {
-          user: loggedInUser,
-          accessToken,
-          refreshToken,
-        },
-        "User logged In successfully!"
-      )
-    );
+    .redirect("/api/v1/quote");
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -149,7 +176,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json(new ApiResponse(200, {}, "User logged Out!"));
+    .render("quote");
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
@@ -213,7 +240,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
-    .json(200, req.user, "current user fetched successfully");
+    .json(new ApiResponse(200, req.user, "current user fetched successfully"));
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -246,4 +273,6 @@ export {
   changeCurrentPassword,
   getCurrentUser,
   updateAccountDetails,
+  getRegisterUser,
+  getLoginUser,
 };

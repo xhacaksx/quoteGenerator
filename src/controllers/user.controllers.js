@@ -4,6 +4,7 @@ import { User } from "../models/user.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import { Subscribe } from "../models/subscribe.models.js";
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {

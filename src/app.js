@@ -35,4 +35,8 @@ import quoteRouter from "./routes/quote.routes.js";
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/quote", quoteRouter);
+
+app.get("/", (req, res) => {
+  res.redirect("/api/v1/quote");
+});
 export { app };

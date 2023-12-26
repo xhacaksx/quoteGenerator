@@ -6,6 +6,7 @@ import { setupCronJob } from "./controllers/sendEmail.js";
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./src/views"));
+
 //middlewares
 
 setupCronJob();
@@ -28,7 +29,7 @@ app.use(
     limit: "16kb",
   })
 );
-
+app.use(express.static("src/public"));
 app.use(cookieParser());
 import userRouter from "./routes/user.routes.js";
 import quoteRouter from "./routes/quote.routes.js";

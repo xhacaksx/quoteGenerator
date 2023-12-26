@@ -1,0 +1,105 @@
+/* main.css */
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: linear-gradient(
+    to bottom right,
+    #f7faff,
+    #c5cae9
+  ); /* Soft gradient background */
+  font-family: sans-serif;
+}
+
+form {
+  text-align: center;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.form-header {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.form-input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.subscribe-button {
+  background-color: #007bff; /* Vibrant blue */
+  color: #fff;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.2s ease-in-out; /* Smooth hover effect */
+}
+
+.subscribe-button:hover {
+  background-color: #0062cc; /* Darker blue on hover */
+}
+/* Input field hover effect */
+.form-input:hover {
+  background-color: #f0f0f0;
+  box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Button pulse animation */
+.subscribe-button {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Success message animation (optional) */
+.success-message {
+  display: none; /* Hide initially */
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.5s ease-in-out;
+}
+
+.success-message span {
+  font-size: 16px;
+  color: #333;
+}
+
+@keyframes slideDown {
+  from {
+    top: -100%;
+  }
+  to {
+    top: 0;
+  }
+}

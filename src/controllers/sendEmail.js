@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 });
 
 function setupCronJob() {
-  cron.schedule("*/3 * * * * *", async () => {
+  cron.schedule("0 */12 * * *", async () => {
     try {
       const subscribedUsers = await Subscribe.find({ isSubscribed: true });
 
